@@ -11,12 +11,12 @@ response = ec2_client.create_image(
 	    'Ebs': {
 	        'DeleteOnTermination': True,
 		'VolumeSize': 8,
-		'VolumeType': 'gp2',
+		'VolumeType': 'gp2', # gp2,io1
 		'Encrypted' : False
          },
       },
     ],
     Description='Ami for linux machine',
-    InstanceId='i-061e8351e64a6076a',
+    InstanceId='i-061e8351e64a6076a', #Id of running Instance
     Name='Ami'
 )
