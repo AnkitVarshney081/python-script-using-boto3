@@ -35,6 +35,9 @@ for bucket in s3.buckets.all():
      print(bucket.name)
 
 Ask a question on Stack Overflow and tag it with boto3
+
 Come join the AWS Python community chat on gitter
+
 Open a support ticket with AWS Support
+
 If it turns out that you may have found a bug, please open an issue
