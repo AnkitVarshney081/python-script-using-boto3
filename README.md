@@ -13,18 +13,21 @@ $ pip install boto3
 Next, set up credentials (in e.g. ~/.aws/credentials):
 
 [default]
+
 aws_access_key_id = YOUR_KEY
 aws_secret_access_key = YOUR_SECRET
 Then, set up a default region (in e.g. ~/.aws/config):
 
 [default]
+
 region=us-east-1
+
 Then, from a Python interpreter:
 
->>> import boto3
->>> s3 = boto3.resource('s3')
->>> for bucket in s3.buckets.all():
-        print(bucket.name)
+import boto3
+s3 = boto3.resource('s3')
+for bucket in s3.buckets.all():
+     print(bucket.name)
 
 Ask a question on Stack Overflow and tag it with boto3
 Come join the AWS Python community chat on gitter
