@@ -1,4 +1,3 @@
-# 
 
 import boto3
 import pprint
@@ -62,19 +61,21 @@ ass_rt = vpc_cli.associate_route_table(
 
 print "Associate rt with subnet"
 
+# Add internet gateway route in the route table 
+
 route = vpc_cli.create_route(
     DestinationCidrBlock='0.0.0.0/0',
     GatewayId= internet_gateway.id,
     RouteTableId= route_table.id
 )
 
-print "Add route"
+# Create public security group 
 
-pubSecGrp = vpc.create_security_group(DryRun=False,
-                                      GroupName='pubSecGrp',
+pubSecGrp = vpc.create_security_group(GroupName='pubSecGrp',
                                       Description='Public_Security_Group',
                                       VpcId=vpc_id.id
                                       )
+# Add inbound rule - SSH Protocol
 
 vpc_cli.authorize_security_group_ingress(GroupId=pubSecGrp.id,
                                            IpProtocol='tcp',
@@ -83,12 +84,16 @@ vpc_cli.authorize_security_group_ingress(GroupId=pubSecGrp.id,
                                            CidrIp='0.0.0.0/0'
                                            )
 
+# Add inbound rule - HTTP Protocol
+
 vpc_cli.authorize_security_group_ingress(GroupId=pubSecGrp.id,
                                            IpProtocol='tcp',
                                            FromPort=80,
                                            ToPort=80,
                                            CidrIp='0.0.0.0/0'
                                            )
+
+# UserData
 
 userDataCode = """
 #!/bin/bash
@@ -97,14 +102,15 @@ echo "Welcome To My Website" > /var/www/html/index.html
 service httpd start
 chkconfig httpd on
 """
+# Create instance in Public Subnet 
 
-instance = vpc.create_instances(ImageId='ami-0470e33cd681b2476',
-                                   MinCount=1,
-                                   MaxCount=1,
-                                   KeyName='mumbai',
-				   UserData=userDataCode,
-                                   InstanceType='t2.micro',
-                                   NetworkInterfaces=[
+instance = vpc.create_instances(ImageId='ami-0470e33cd681b2476', 			# Choose AMI
+                                   MinCount=1,						# Minimum Number of instances
+                                   MaxCount=1,						# Maximum Number of instances
+                                   KeyName='mumbai',					# Enter Private Key Name
+				   UserData=userDataCode,				# Userdata
+                                   InstanceType='t2.micro',				# Instance type
+                                   NetworkInterfaces=[					# ENI (Elastic Network Interface)
                                        {
                                            'SubnetId': response.id,
                                            'Groups':  [pubSecGrp.id],
@@ -114,6 +120,7 @@ instance = vpc.create_instances(ImageId='ami-0470e33cd681b2476',
                                        }
                                    ]
                                    )
-vpc_cli.get_waiter('instance_running')
+
+vpc_cli.get_waiter('instance_running')						      # the script will wait untill Instance is running.
 print instance
 
