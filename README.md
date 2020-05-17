@@ -1,12 +1,15 @@
 Boto 3 - The AWS SDK for Python
+
 Build Status Version Gitter
 
 Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK) for Python, which allows Python developers to write software that makes use of services like Amazon S3 and Amazon EC2. You can find the latest, most up to date, documentation at our doc site, including a list of services that are supported.
 
 Quick Start
+
 First, install the library and set a default region:
 
 $ pip install boto3
+
 Next, set up credentials (in e.g. ~/.aws/credentials):
 
 [default]
